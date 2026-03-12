@@ -18,7 +18,25 @@ jobs:
       - uses: actions/checkout@v3
         with:
           submodules: true
-          lfs: false
+          lfs: true
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build
+        run: pnpm run build
+
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
@@ -28,9 +46,8 @@ jobs:
           action: "upload"
           ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
           # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
-          app_location: "/"
-          output_location: "artifacts/hobby-survey/dist/public"
-          app_build_command: "npm install -g pnpm && pnpm install && pnpm run build"
+          app_location: "artifacts/hobby-survey/dist/public"
+          skip_app_build: true
           api_location: "" # Api source code path - optional
           ###### End of Repository/Build Configurations ######
 
